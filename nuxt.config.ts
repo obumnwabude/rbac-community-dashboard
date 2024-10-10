@@ -2,5 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss']
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt'],
+  build: {
+    transpile: ['axios', 'permitio', 'pino']
+  },
+  runtimeConfig: {
+    permitToken: process.env.PERMIT_TOKEN
+  }
 });
