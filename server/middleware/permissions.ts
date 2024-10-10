@@ -1,9 +1,9 @@
 import { Permit } from 'permitio';
 
 export default defineEventHandler(async (event) => {
-  // Only check permissions if the request is a POST request
+  // Only check permissions if the request is a POST or DELETE request
   const { method, path } = event;
-  if (method !== 'POST') return;
+  if (method !== 'POST' && method !== 'DELETE') return;
 
   // Ensure authorization header is present
   let authorization = event.node.req.headers['authorization'];
@@ -21,6 +21,11 @@ export default defineEventHandler(async (event) => {
   // Capitalize the first letter
   resource = resource.charAt(0).toUpperCase() + resource.slice(1);
 
+  // Set the action on the resource from the request method. 
+  // This is for example purposes only. In a real application, you would
+  // have a more robust way to determine the action. 
+  const action = method === 'POST' ? 'create' : 'delete';
+
   // Construct the Permit object. Use the token from runtime config.
   const config = useRuntimeConfig(event);
   const permit = new Permit({
@@ -30,6 +35,6 @@ export default defineEventHandler(async (event) => {
 
   // Check if the user is permitted to create the resource. 
   // If not, throw an error.
-  const isPermitted = await permit.check(user, 'create', resource);
+  const isPermitted = await permit.check(user, action, resource);
   if (!isPermitted) throw new Error('Unauthorized');
 });

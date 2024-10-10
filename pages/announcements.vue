@@ -23,6 +23,15 @@ const announce = async () => {
   isSubmitting.value = false;
   announcementInput.value = '';
 };
+
+const deleteAnnouncement = async (announcement: string) => {
+  await $fetch('/api/announcements', {
+    headers: { authorization: `Bearer ${permissions.userId}` },
+    method: 'DELETE',
+    body: { announcement }
+  });
+  await refresh();
+};
 </script>
 
 <template>
@@ -72,7 +81,11 @@ const announce = async () => {
   </p>
   <div
     v-for="announcement of announcements"
-    class="text-lg p-4 rounded-md mb-8 border shadow"
-    v-html="announcement"
-  ></div>
+    class="text-lg p-4 rounded-md mb-8 border shadow flex items-end gap-4 max-[512px]:flex-col"
+  >
+    <p class="w-full">{{ announcement }}</p>
+    <button @click="() => deleteAnnouncement(announcement)" v-if="permissions.isAdmin">
+      <IconDelete class="text-red-300" />
+    </button>
+  </div>
 </template>

@@ -23,6 +23,15 @@ const makePost = async () => {
   isSubmitting.value = false;
   postInput.value = '';
 };
+
+const deletePost = async (post: string) => {
+  await $fetch('/api/posts', {
+    headers: { authorization: `Bearer ${permissions.userId}` },
+    method: 'DELETE',
+    body: { post }
+  });
+  await refresh();
+};
 </script>
 
 <template>
@@ -67,7 +76,13 @@ const makePost = async () => {
   <p v-else-if="posts!.length == 0" class="text-gray-500 text-center my-8">
     No Posts Yet!
   </p>
-  <div v-for="post of posts" class="text-lg p-4 rounded-md mb-8 border shadow">
-    {{ post }}
+  <div
+    v-for="post of posts"
+    class="text-lg p-4 rounded-md mb-8 border shadow flex items-end gap-4 max-[512px]:flex-col"
+  >
+    <p class="w-full">{{ post }}</p>
+    <button @click="() => deletePost(post)" v-if="permissions.isMember">
+      <IconDelete class="text-red-300" />
+    </button>
   </div>
 </template>

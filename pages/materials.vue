@@ -23,6 +23,15 @@ const shareMaterial = async () => {
   isSubmitting.value = false;
   materialInput.value = '';
 };
+
+const deleteMaterial = async (material: string) => {
+  await $fetch('/api/materials', {
+    headers: { authorization: `Bearer ${permissions.userId}` },
+    method: 'DELETE',
+    body: { material }
+  });
+  await refresh();
+};
 </script>
 
 <template>
@@ -73,7 +82,11 @@ const shareMaterial = async () => {
   </p>
   <div
     v-for="material of materials"
-    class="text-lg p-4 rounded-md mb-8 border shadow"
-    v-html="material"
-  ></div>
+    class="text-lg p-4 rounded-md mb-8 border shadow flex items-end gap-4 max-[512px]:flex-col"
+  >
+    <p class="w-full">{{ material }}</p>
+    <button @click="() => deleteMaterial(material)" v-if="permissions.isMentor">
+      <IconDelete class="text-red-300" />
+    </button>
+  </div>
 </template>

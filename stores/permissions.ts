@@ -1,13 +1,16 @@
+export const GUEST_ID = 'guest';
 export const MEMBER_ID = 'example-member';
 export const MENTOR_ID = 'example-mentor';
 export const ADMIN_ID = 'example-admin';
 
 export type Role = 'member' | 'mentor' | 'admin';
+export const GUEST_ROLES: Role[] = [];
 export const MEMBER_ROLES: Role[] = ['member'];
 export const MENTOR_ROLES: Role[] = ['member', 'mentor'];
 export const ADMIN_ROLES: Role[] = ['member', 'mentor', 'admin'];
 
 export const users: Record<string, Role[]> = {
+  [GUEST_ID]: GUEST_ROLES,
   [MEMBER_ID]: MEMBER_ROLES,
   [MENTOR_ID]: MENTOR_ROLES,
   [ADMIN_ID]: ADMIN_ROLES
